@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>AMRP AI Dashboard</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+
+body{
+background: linear-gradient(135deg,#eef2f7,#dce7f5);
+min-height:100vh;
+font-family: 'Segoe UI', sans-serif;
+}
+
+/* NAVBAR */
+
+.navbar{
+box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* WELCOME CARD */
+
+.hero-card{
+background:white;
+padding:40px;
+border-radius:20px;
+box-shadow:0 8px 25px rgba(0,0,0,0.12);
+}
+
+/* DASHBOARD CARDS */
+
+.dashboard-card{
+border:none;
+border-radius:18px;
+padding:30px;
+transition:0.35s;
+cursor:pointer;
+box-shadow:0 6px 20px rgba(0,0,0,0.1);
+height:100%;
+}
+
+.dashboard-card:hover{
+transform:translateY(-10px);
+box-shadow:0 14px 35px rgba(0,0,0,0.18);
+}
+
+/* ICON STYLE */
+
+.icon-large{
+font-size:45px;
+}
+
+/* FOOTER */
+
+.footer{
+margin-top:60px;
+text-align:center;
+color:#777;
+font-size:14px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-dark bg-dark px-4">
+
+<span class="navbar-brand fw-bold fs-4">
+
+<i class="bi bi-graph-up-arrow"></i>
+AMRP AI Business Intelligence
+
+</span>
+
+<div>
+
+
+
+<a href="/logout" class="btn btn-danger">
+
+<i class="bi bi-box-arrow-right"></i>
+Logout
+
+</a>
+
+</div>
+
+</nav>
+
+
+<div class="container mt-5">
+
+
+<!-- WELCOME SECTION -->
+
+<div class="hero-card mb-5">
+
+<h2 class="fw-bold mb-2">
+
+Welcome, Retailer!
+
+</h2>
+
+<p class="text-muted mb-0">
+
+Use the AI-powered tools below to analyze your business data, optimize inventory,
+evaluate loan capacity, and discover competitive market pricing.
+
+</p>
+
+</div>
+
+
+<!-- DASHBOARD MODULES -->
+
+<div class="row g-4">
+
+
+<!-- LOAN ANALYZER -->
+
+<div class="col-md-4">
+
+<a href="/loan" class="text-decoration-none">
+
+<div class="dashboard-card text-center bg-white">
+
+<div class="icon-large text-primary mb-3">
+
+<i class="bi bi-bank"></i>
+
+</div>
+
+<h4 class="fw-bold">
+
+Loan Analyzer
+
+</h4>
+
+<p class="text-muted">
+
+Evaluate borrowing capacity and understand safe loan limits using financial analysis.
+
+</p>
+
+</div>
+
+</a>
+
+</div>
+
+
+<!-- INVENTORY INTELLIGENCE -->
+
+<div class="col-md-4">
+
+<a href="/inventory" class="text-decoration-none">
+
+<div class="dashboard-card text-center bg-white">
+
+<div class="icon-large text-success mb-3">
+
+<i class="bi bi-box-seam"></i>
+
+</div>
+
+<h4 class="fw-bold">
+
+Inventory Intelligence
+
+</h4>
+
+<p class="text-muted">
+
+Upload product data and receive AI-driven inventory insights,
+ABC/VED analysis, demand forecasting and stock optimization.
+
+</p>
+
+</div>
+
+</a>
+
+</div>
+
+
+<!-- PRICE COMPARISON -->
+
+<div class="col-md-4">
+
+<a href="/price" class="text-decoration-none">
+
+<div class="dashboard-card text-center bg-white">
+
+<div class="icon-large text-warning mb-3">
+
+<i class="bi bi-currency-rupee"></i>
+
+</div>
+
+<h4 class="fw-bold">
+
+Price Intelligence
+
+</h4>
+
+<p class="text-muted">
+
+Compare market prices and generate optimal pricing bands
+using robust statistical analysis.
+
+</p>
+
+</div>
+
+</a>
+
+</div>
+
+
+</div>
+
+
+<!-- FOOTER -->
+
+<div class="footer mt-5">
+
+<p>
+
+AMRP AI Decision System • Built with Python + Flask + Bootstrap
+
+</p>
+
+</div>
+
+
+</div>
+
+</body>
+
+</html>

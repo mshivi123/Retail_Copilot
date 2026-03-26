@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Loan Analyzer | AMRP</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+
+body{
+background: linear-gradient(120deg,#eef2f7,#d9e6f5);
+min-height:100vh;
+}
+
+.card-box{
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.15);
+}
+
+.result-card{
+border-radius:12px;
+background:white;
+padding:20px;
+box-shadow:0 6px 20px rgba(0,0,0,0.1);
+}
+
+.metric{
+font-size:22px;
+font-weight:600;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-4">
+
+<span class="navbar-brand fw-bold">
+AMRP Loan Analyzer
+</span>
+
+<div>
+
+<a href="/dashboard" class="btn btn-outline-light me-2">
+<i class="bi bi-arrow-left"></i> Dashboard
+</a>
+
+<a href="/logout" class="btn btn-danger">
+Logout
+</a>
+
+</div>
+
+</nav>
+
+
+<div class="container mt-5">
+
+
+<div class="row">
+
+<div class="col-md-6">
+
+
+<div class="card card-box p-4">
+
+<h4 class="mb-4">
+<i class="bi bi-bank"></i> Business Loan Eligibility
+</h4>
+
+
+<form method="POST">
+
+
+<div class="mb-3">
+
+<label class="form-label">Industry</label>
+
+<select class="form-select" name="industry" required>
+
+<option value="retail">Retail</option>
+<option value="manufacturing">Manufacturing</option>
+<option value="trading">Trading</option>
+<option value="services">Services</option>
+<option value="restaurant">Restaurant</option>
+<option value="ecommerce">Ecommerce</option>
+<option value="pharma">Pharma</option>
+<option value="textile">Textile</option>
+<option value="electronics">Electronics</option>
+<option value="construction">Construction</option>
+
+</select>
+
+</div>
+
+
+<div class="mb-3">
+
+<label class="form-label">Owner Capital (₹)</label>
+<input type="number" class="form-control" name="owner_capital" required>
+
+</div>
+
+
+<div class="mb-3">
+
+<label class="form-label">Existing Debt (₹)</label>
+<input type="number" class="form-control" name="existing_debt" required>
+
+</div>
+
+
+<div class="mb-3">
+
+<label class="form-label">Monthly Sales (₹)</label>
+<input type="number" class="form-control" name="monthly_sales" required>
+
+</div>
+
+
+<div class="mb-3">
+
+<label class="form-label">Monthly Expenses (₹)</label>
+<input type="number" class="form-control" name="monthly_expenses" required>
+
+</div>
+
+
+<div class="mb-3">
+
+<label class="form-label">Inventory Value (₹)</label>
+<input type="number" class="form-control" name="inventory_value" required>
+
+</div>
+
+
+<button class="btn btn-primary w-100">
+<i class="bi bi-graph-up"></i> Analyze Loan Capacity
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+
+<div class="col-md-6">
+
+
+{% if result %}
+
+<div class="card card-box p-4">
+
+<h4 class="mb-4">
+<i class="bi bi-bar-chart"></i> Financial Analysis
+</h4>
+
+
+{% if result.error %}
+
+<div class="alert alert-danger">
+{{result.error}}
+</div>
+
+{% else %}
+
+
+<div class="row g-3">
+
+<div class="col-6">
+<div class="result-card text-center">
+<p>Market Interest</p>
+<div class="metric text-primary">{{result.interest_rate}}%</div>
+</div>
+</div>
+
+
+<div class="col-6">
+<div class="result-card text-center">
+<p>Monthly Profit</p>
+<div class="metric text-success">₹{{result.monthly_profit}}</div>
+</div>
+</div>
+
+
+<div class="col-6">
+<div class="result-card text-center">
+<p>Current D/E Ratio</p>
+<div class="metric">{{result.current_de_ratio}}</div>
+</div>
+</div>
+
+
+<div class="col-6">
+<div class="result-card text-center">
+<p>Industry Range</p>
+<div class="metric">{{result.industry_range}}</div>
+</div>
+</div>
+
+
+<div class="col-6">
+<div class="result-card text-center">
+<p>Safe EMI</p>
+<div class="metric">₹{{result.safe_emi}}</div>
+</div>
+</div>
+
+
+<div class="col-6">
+<div class="result-card text-center">
+<p>Recommended D/E</p>
+<div class="metric">{{result.recommended_de}}</div>
+</div>
+</div>
+
+
+</div>
+
+
+<hr class="my-4">
+
+
+<div class="alert alert-success text-center">
+
+<h4>
+Recommended Loan Amount
+</h4>
+
+<h2>
+₹{{result.recommended_loan}}
+</h2>
+
+</div>
+
+
+{% endif %}
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

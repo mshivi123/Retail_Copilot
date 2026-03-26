@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Inventory Intelligence</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+body{
+background:#f4f7fb;
+}
+
+.card{
+border-radius:12px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+<h2>Inventory Intelligence Dashboard</h2>
+
+<a href="/dashboard" class="btn btn-dark">
+Dashboard
+</a>
+
+</div>
+
+<div class="card p-4 mb-4">
+
+<form action="/inventory" method="POST" enctype="multipart/form-data">
+
+<input type="file" name="file" class="form-control" required>
+
+<br>
+
+<button class="btn btn-primary">
+Analyze Inventory
+</button>
+
+</form>
+
+</div>
+
+{% if results %}
+
+<div class="row mb-4">
+
+<div class="col-md-4">
+
+<div class="card p-3 bg-primary text-white">
+
+<h5>Total Products</h5>
+
+<h3>{{results.total_products}}</h3>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card p-3 bg-success text-white">
+
+<h5>Inventory Models</h5>
+
+<h3>ABC + EOQ</h3>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card p-3 bg-warning">
+
+<h5>Demand Prediction</h5>
+
+<h3>ML Active</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<h4>Product Recommendations</h4>
+
+<table class="table table-striped">
+
+<tr>
+<th>Product</th>
+<th>Sales</th>
+<th>ABC</th>
+<th>EOQ</th>
+<th>Reorder</th>
+<th>Turnover</th>
+<th>Forecast</th>
+<th>Action</th>
+</tr>
+
+{% for r in results.recommendations %}
+
+<tr>
+<td>{{r.product}}</td>
+<td>{{r.sales}}</td>
+<td>{{r.abc}}</td>
+<td>{{r.eoq}}</td>
+<td>{{r.reorder}}</td>
+<td>{{r.turnover}}</td>
+<td>{{r.forecast}}</td>
+<td>{{r.action}}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+<h4 class="mt-5">Dead Stock</h4>
+
+<table class="table table-striped">
+
+<tr>
+<th>Product</th>
+<th>Sales</th>
+<th>MRP</th>
+</tr>
+
+{% for d in results.dead_stock %}
+
+<tr>
+<td>{{d.product}}</td>
+<td>{{d.sales}}</td>
+<td>{{d.mrp}}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+<h4 class="mt-5">Analytics Dashboard</h4>
+
+<div class="row">
+
+<div class="col-md-4">
+<img src="/static/{{results.sales_chart}}" class="img-fluid">
+</div>
+
+<div class="col-md-4">
+<img src="/static/{{results.abc_chart}}" class="img-fluid">
+</div>
+
+<div class="col-md-4">
+<img src="/static/{{results.forecast_chart}}" class="img-fluid">
+</div>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

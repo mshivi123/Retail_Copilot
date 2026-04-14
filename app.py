@@ -7,21 +7,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from d_e_calculation import analyze_loan
 from price_comparison import compare_prices
 from stock_recommendation import analyze_inventory
-os.makedirs("uploads", exist_ok=True)
+
+# Ensure folders exist
 os.makedirs("static", exist_ok=True)
 
 app = Flask(__name__)
 app.secret_key = "super_secret_key"
-
-
-# -------------------
-# CREATE UPLOAD FOLDER
-# -------------------
-
-UPLOAD_FOLDER = "uploads"
-
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
 
 
 # -------------------
@@ -35,7 +26,6 @@ def get_db():
 
 
 def init_db():
-
     conn = get_db()
 
     conn.execute("""
@@ -58,7 +48,6 @@ init_db()
 # -------------------
 
 def valid_password(p):
-
     return (
         len(p) >= 6 and
         re.search(r"[A-Z]", p) and
@@ -88,20 +77,13 @@ def login():
         conn.close()
 
         if user:
-
             if check_password_hash(user["password"], password):
-
                 session["user"] = email
-
                 return redirect("/dashboard")
-
             else:
                 flash("Incorrect password", "danger")
-
         else:
-
             flash("User not found. Please register.", "warning")
-
             return redirect("/register")
 
     return render_template("login.html")
@@ -117,24 +99,19 @@ def register():
     if request.method == "POST":
 
         try:
-
             name = request.form.get("name")
             email = request.form.get("email")
             password = request.form.get("password")
 
             if len(name) < 2:
-
                 flash("Name too short", "danger")
-
                 return redirect("/register")
 
             if not valid_password(password):
-
                 flash(
                     "Password must be 6+ chars, include 1 uppercase & 1 number",
                     "danger"
                 )
-
                 return redirect("/register")
 
             conn = get_db()
@@ -145,11 +122,8 @@ def register():
             ).fetchone()
 
             if existing:
-
                 conn.close()
-
                 flash("User already exists. Please login.", "warning")
-
                 return redirect("/")
 
             conn.execute(
@@ -161,15 +135,11 @@ def register():
             conn.close()
 
             flash("Registered successfully! Please login.", "success")
-
             return redirect("/")
 
         except Exception as e:
-
             print("ERROR:", e)
-
             flash("Something went wrong. Try again.", "danger")
-
             return redirect("/register")
 
     return render_template("register.html")
@@ -194,9 +164,7 @@ def dashboard():
 
 @app.route("/logout")
 def logout():
-
     session.clear()
-
     return redirect("/")
 
 
@@ -232,7 +200,7 @@ def loan():
 
 
 # -------------------
-# INVENTORY ANALYSIS
+# INVENTORY ANALYSIS (FIXED)
 # -------------------
 
 @app.route("/inventory", methods=["GET", "POST"])
@@ -245,22 +213,16 @@ def inventory():
 
         file = request.files.get("file")
 
-        if not file:
-
+        if not file or file.filename == "":
             error = "Please upload a dataset"
 
         else:
-
-            filepath = os.path.join(UPLOAD_FOLDER, file.filename)
-
-            file.save(filepath)
-
             try:
-
-                results = analyze_inventory(filepath)
+                # 🔥 Direct file handling (NO saving)
+                results = analyze_inventory(file)
 
             except Exception as e:
-
+                print("ERROR:", e)
                 error = str(e)
 
     return render_template(
@@ -289,8 +251,9 @@ def price():
 
 
 # -------------------
-# RUN APP
+# RUN APP (RENDER FIX)
 # -------------------
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)

@@ -18,7 +18,6 @@ app.secret_key = "super_secret_key"
 # -------------------
 # DATABASE
 # -------------------
-
 def get_db():
     conn = sqlite3.connect("users.db")
     conn.row_factory = sqlite3.Row
@@ -27,7 +26,6 @@ def get_db():
 
 def init_db():
     conn = get_db()
-
     conn.execute("""
     CREATE TABLE IF NOT EXISTS users(
         email TEXT PRIMARY KEY,
@@ -35,7 +33,6 @@ def init_db():
         password TEXT NOT NULL
     )
     """)
-
     conn.commit()
     conn.close()
 
@@ -46,7 +43,6 @@ init_db()
 # -------------------
 # PASSWORD VALIDATION
 # -------------------
-
 def valid_password(p):
     return (
         len(p) >= 6 and
@@ -58,7 +54,6 @@ def valid_password(p):
 # -------------------
 # LOGIN
 # -------------------
-
 @app.route("/", methods=["GET", "POST"])
 def login():
 
@@ -68,12 +63,10 @@ def login():
         password = request.form.get("password")
 
         conn = get_db()
-
         user = conn.execute(
             "SELECT * FROM users WHERE email=?",
             (email,)
         ).fetchone()
-
         conn.close()
 
         if user:
@@ -92,7 +85,6 @@ def login():
 # -------------------
 # REGISTER
 # -------------------
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
@@ -108,10 +100,7 @@ def register():
                 return redirect("/register")
 
             if not valid_password(password):
-                flash(
-                    "Password must be 6+ chars, include 1 uppercase & 1 number",
-                    "danger"
-                )
+                flash("Password must include uppercase & number", "danger")
                 return redirect("/register")
 
             conn = get_db()
@@ -123,7 +112,7 @@ def register():
 
             if existing:
                 conn.close()
-                flash("User already exists. Please login.", "warning")
+                flash("User already exists", "warning")
                 return redirect("/")
 
             conn.execute(
@@ -134,12 +123,11 @@ def register():
             conn.commit()
             conn.close()
 
-            flash("Registered successfully! Please login.", "success")
+            flash("Registered successfully!", "success")
             return redirect("/")
 
         except Exception as e:
-            print("ERROR:", e)
-            flash("Something went wrong. Try again.", "danger")
+            flash("Error occurred", "danger")
             return redirect("/register")
 
     return render_template("register.html")
@@ -148,20 +136,18 @@ def register():
 # -------------------
 # DASHBOARD
 # -------------------
-
 @app.route("/dashboard")
 def dashboard():
 
     if "user" not in session:
         return redirect("/")
 
-    return render_template("dashboard.html", user=session["user"])
+    return render_template("dashboard.html")
 
 
 # -------------------
 # LOGOUT
 # -------------------
-
 @app.route("/logout")
 def logout():
     session.clear()
@@ -169,40 +155,8 @@ def logout():
 
 
 # -------------------
-# LOAN ANALYZER
+# INVENTORY ANALYSIS
 # -------------------
-
-@app.route("/loan", methods=["GET", "POST"])
-def loan():
-
-    result = None
-
-    if request.method == "POST":
-
-        industry = request.form.get("industry").lower()
-
-        owner_capital = float(request.form.get("owner_capital"))
-        existing_debt = float(request.form.get("existing_debt"))
-        monthly_sales = float(request.form.get("monthly_sales"))
-        monthly_expenses = float(request.form.get("monthly_expenses"))
-        inventory_value = float(request.form.get("inventory_value"))
-
-        result = analyze_loan(
-            industry,
-            owner_capital,
-            existing_debt,
-            monthly_sales,
-            monthly_expenses,
-            inventory_value
-        )
-
-    return render_template("loan.html", result=result)
-
-
-# -------------------
-# INVENTORY ANALYSIS (FIXED)
-# -------------------
-
 @app.route("/inventory", methods=["GET", "POST"])
 def inventory():
 
@@ -214,15 +168,13 @@ def inventory():
         file = request.files.get("file")
 
         if not file or file.filename == "":
-            error = "Please upload a dataset"
+            error = "Please upload a file"
 
         else:
             try:
-                # 🔥 Direct file handling (NO saving)
                 results = analyze_inventory(file)
 
             except Exception as e:
-                print("ERROR:", e)
                 error = str(e)
 
     return render_template(
@@ -233,27 +185,45 @@ def inventory():
 
 
 # -------------------
-# PRICE COMPARISON
+# PRICE
 # -------------------
-
 @app.route("/price", methods=["GET", "POST"])
 def price():
 
     result = None
 
     if request.method == "POST":
-
         product = request.form.get("product")
-
         result = compare_prices(product)
 
     return render_template("price.html", result=result)
 
 
 # -------------------
-# RUN APP (RENDER FIX)
+# LOAN
 # -------------------
+@app.route("/loan", methods=["GET", "POST"])
+def loan():
 
+    result = None
+
+    if request.method == "POST":
+
+        result = analyze_loan(
+            request.form.get("industry").lower(),
+            float(request.form.get("owner_capital")),
+            float(request.form.get("existing_debt")),
+            float(request.form.get("monthly_sales")),
+            float(request.form.get("monthly_expenses")),
+            float(request.form.get("inventory_value"))
+        )
+
+    return render_template("loan.html", result=result)
+
+
+# -------------------
+# RUN
+# -------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
